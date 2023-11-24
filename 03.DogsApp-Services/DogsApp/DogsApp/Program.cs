@@ -2,6 +2,7 @@
 using DogsApp.Core.Contracts;
 using DogsApp.Core.Services;
 using DogsApp.Infrastructure.Data;
+using DogsApp.Infrastructure.Data.Domain;
 using DogsApp.Infrastructure.Data.Infrastructure;
 
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +22,7 @@ namespace DogsApp
                 options.UseLazyLoadingProxies().UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
                 options.Password.RequireDigit = false;
