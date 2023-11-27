@@ -58,9 +58,6 @@ namespace DogsApp.Areas.Identity.Pages.Account
             [StringLength(20, MinimumLength = 6)]
             public string UserName { get; set; }
 
-            
-
-
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -104,6 +101,7 @@ namespace DogsApp.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    _userManager.AddToRoleAsync(user, "Client").Wait();
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }
