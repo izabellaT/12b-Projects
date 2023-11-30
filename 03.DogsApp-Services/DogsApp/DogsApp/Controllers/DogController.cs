@@ -1,15 +1,20 @@
 ﻿
+using System.Security.Claims;
+
 using DogsApp.Core.Contracts;
 using DogsApp.Infrastructure.Data;
 using DogsApp.Infrastructure.Data.Domain;
 using DogsApp.Models.Breed;
 using DogsApp.Models.Dog;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace DogsApp.Controllers
 {
+    [Authorize]
     public class DogController : Controller
     {
         private readonly IDogService _dogService;
@@ -37,8 +42,8 @@ namespace DogsApp.Controllers
         {
             if (ModelState.IsValid)
             {
-
-              var createdId =  _dogService.Create(bindingModel.Name, bindingModel.Age, bindingModel.BreedId, bindingModel.Picture);
+                string currentUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+              var createdId =  _dogService.Create(bindingModel.Name, bindingModel.Age, bindingModel.BreedId, bindingModel.Picture, currentUserId);
                 if (createdId)
                 {
                     return this.RedirectToAction(nameof(Index));
@@ -128,6 +133,7 @@ namespace DogsApp.Controllers
 
         }
 
+        [AllowAnonymous]
         public IActionResult Index(string searchStringBreed, string searchStringName)
         {
 
@@ -138,7 +144,8 @@ namespace DogsApp.Controllers
                     Name = dogFromDb.Name,
                     Age= dogFromDb.Age,
                     BreedName=dogFromDb.Breed.Name,
-                    Picture=dogFromDb.Picture
+                    Picture=dogFromDb.Picture,
+                    FullName = dogFromDb.Owner.FirstName + "" + dogFromDb.Owner.LastName
                 }).ToList();
            
             return this.View(dogs);
@@ -157,7 +164,8 @@ namespace DogsApp.Controllers
                 Name = item.Name,
                 Age = item.Age,
                 BreedName = item.Breed.Name,
-                Picture = item.Picture
+                Picture = item.Picture,
+                FullName = item.Owner.FirstName + "" + item.Owner.LastName
             };
             return View(dog);
         }
