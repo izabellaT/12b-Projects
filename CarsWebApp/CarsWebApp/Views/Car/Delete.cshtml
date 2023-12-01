@@ -1,4 +1,4 @@
-﻿@model CarsWebApp.Models.Car.CarEditViewModel
+﻿@model CarsWebApp.Models.Car.CarDetailsViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -24,10 +24,10 @@
             @Html.DisplayFor(model => model.Manufacturer)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Model)
+            @Html.DisplayNameFor(model => model.ModelName)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Model)
+            @Html.DisplayFor(model => model.ModelName)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Picture)

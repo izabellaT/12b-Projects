@@ -19,16 +19,17 @@ namespace CarsWebApp.Core.Services
             _context = context;
         }
 
-        public bool Create(string regNumber, string Manufacturer, string Model, string Picture, DateTime YearOfManufacture, decimal Price)
+        public bool Create(string regNumber, string Manufacturer, int modelId, string Picture, DateTime YearOfManufacture, decimal Price, string userId)
         {
             Car item = new Car
             {
                 RegNumber = regNumber,
                 Manufacturer = Manufacturer,  
-                Model = Model,
+                Model = _context.Models.Find(modelId),
                 Picture = Picture,
                 YearOfManufacture = YearOfManufacture,
-                Price = Price
+                Price = Price,
+                OwnerId = userId
             };
             _context.Cars.Add(item);
             return _context.SaveChanges() != 0;
@@ -50,26 +51,15 @@ namespace CarsWebApp.Core.Services
             List<Car> cars = _context.Cars.ToList();
             if (!String.IsNullOrEmpty(searchStringModel) && !String.IsNullOrEmpty(searchStringPrice))
             {
-                cars = cars.Where(d => d.Model.Contains(searchStringModel) && d.Price.ToString().Contains(searchStringPrice)).ToList();      
+                cars = cars.Where(d => d.Model.Name.Contains(searchStringModel) && d.Price.ToString().Contains(searchStringPrice)).ToList();
             }
             else if (!String.IsNullOrEmpty(searchStringModel))
             {
-                cars = cars.Where(d => d.Model.Contains(searchStringModel)).ToList();
+                cars = cars.Where(d => d.Model.Name.Contains(searchStringModel)).ToList();
             }
             else if (!String.IsNullOrEmpty(searchStringPrice))
             {
                 cars = cars.Where(d => d.Price.ToString().Contains(searchStringPrice)).ToList();
-            }
-            return cars;
-        }
-
-        public List<Car> SortCars(string priceUp)
-        {
-            List<Car> cars = _context.Cars.ToList();
-    
-           if (!String.IsNullOrEmpty(priceUp))
-            {
-                cars.Sort();
             }
             return cars;
         }
@@ -85,7 +75,7 @@ namespace CarsWebApp.Core.Services
             return _context.SaveChanges() != 0;
         }
 
-        public bool UpdateCar(int carId, string regNumber, string Manufacturer, string Model, string Picture, DateTime YearOfManufacture, decimal Price)
+        public bool UpdateCar(int carId, string regNumber, string Manufacturer, int modelId, string Picture, DateTime YearOfManufacture, decimal Price)
         {
             var car = GetCarById(carId);
             if (car == default(Car))
@@ -95,7 +85,7 @@ namespace CarsWebApp.Core.Services
 
            car.RegNumber = regNumber;
             car.Manufacturer = Manufacturer;
-            car.Model = Model;
+            car.Model = _context.Models.Find(modelId);
             car.Picture = Picture;
             car.YearOfManufacture = YearOfManufacture;
             car.Price = Price;

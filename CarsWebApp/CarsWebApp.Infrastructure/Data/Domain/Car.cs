@@ -14,22 +14,26 @@ namespace CarsWebApp.Infrastructure.Data.Domain
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(8)]
-        [MinLength(8)]
+      
         public string RegNumber { get; set; } = null!;
 
         [Required]
-        [MaxLength(30)]
+     
         public string Manufacturer { get; set; } = null!;
 
-        [Required]
-        [MaxLength(30)]
-        public string Model { get; set; } = null!;
+       [Required]
+        public int ModelId { get; set; }
+        public virtual Model Model { get; set; } = null!;
         public string? Picture { get; set; }
         public DateTime YearOfManufacture { get; set; }
 
         [Required]
         [Range(1000, 30000)]
         public decimal Price { get; set; }
+
+      
+
+        public string OwnerId { get; set; } = null!;
+        public virtual ApplicationUser Owner { get; set; } = null!;
     }
 }

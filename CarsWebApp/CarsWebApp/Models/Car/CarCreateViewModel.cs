@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using CarsWebApp.Models.Model;
+
 namespace CarsWebApp.Models.Car
 {
     public class CarCreateViewModel
@@ -7,20 +9,19 @@ namespace CarsWebApp.Models.Car
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(8)]
-        [MinLength(8)]
+       
         [Display(Name = "RegNumber")]
         public string RegNumber { get; set; } = null!;
 
         [Required]
-        [MaxLength(30)]
+     
         [Display(Name = "Manufacturer")]
         public string Manufacturer { get; set; } = null!;
 
         [Required]
-        [MaxLength(30)]
+      
         [Display(Name = "Model")]
-        public string Model { get; set; } = null!;
+        public int ModelId { get; set; }
 
         [Display(Name = "Car Picture")]
         public string? Picture { get; set; }
@@ -32,5 +33,7 @@ namespace CarsWebApp.Models.Car
         [Range(1000, 30000)]
         [Display(Name = "Price")]
         public decimal Price { get; set; }
+
+        public virtual List<ModelPairViewModel> Models { get; set; } = new List<ModelPairViewModel>();
     }
 }

@@ -2,6 +2,8 @@
 using CarsWebApp.Core.Contracts;
 using CarsWebApp.Core.Services;
 using CarsWebApp.Infrastructure.Data;
+using CarsWebApp.Infrastructure.Data.Domain;
+using CarsWebApp.Infrastructure.Infrastructure;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,15 +19,26 @@ namespace CarsWebApp
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseLazyLoadingProxies().UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+            })
+               . AddRoles<IdentityRole>()
+               . AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddTransient<ICarService, CarService>();
+            builder.Services.AddTransient<IModelService, ModelService>();
+
             var app = builder.Build();
+            app.PrepareDatabase();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

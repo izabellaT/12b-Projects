@@ -13,7 +13,7 @@ namespace CarsWebApp.Models.Car
         public string Manufacturer { get; set; } = null!;
 
         [Display(Name = "Model")]
-        public string Model { get; set; } = null!;
+        public string ModelName { get; set; } = null!;
 
         [Display(Name = "Car Picture")]
         public string? Picture { get; set; }
@@ -23,5 +23,8 @@ namespace CarsWebApp.Models.Car
 
         [Display(Name = "Price")]
         public decimal Price { get; set; }
+
+        [Display(Name = "Full Name")]
+        public string FullName { get; set; } = null!;
     }
 }
